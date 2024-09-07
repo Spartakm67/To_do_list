@@ -30,7 +30,13 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey[500],
       appBar: AppBar(
         backgroundColor: Colors.cyan[100],
-        title: const Text('To-do list'),
+        title: const Text('To do list',
+        style: TextStyle(
+          color: Colors.deepOrange,
+          fontWeight: FontWeight.w700,
+          fontSize: 22,
+          ),
+        ),
         centerTitle: true,
       ),
       body: ListView.builder(
