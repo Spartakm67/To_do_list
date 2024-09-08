@@ -24,6 +24,26 @@ class _HomeState extends State<Home> {
     ]);
   }
 
+  void _menuOpen() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Menu'),),
+            body: Row(
+              children: [
+                ElevatedButton(onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true);
+                }, child: const Text('To the main page')),
+                const Padding(padding: EdgeInsets.only(left: 15)),
+                const Text('New menu')
+              ],
+            )
+          );
+        })
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +58,11 @@ class _HomeState extends State<Home> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: _menuOpen,
+              icon: const Icon(Icons.menu_outlined))
+        ],
       ),
       body: ListView.builder(
           itemCount: todoList.length,
