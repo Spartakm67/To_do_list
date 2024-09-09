@@ -12,3 +12,10 @@ void main() => runApp(MaterialApp(
     '/todo': (context) => const Home(),
   },
 ));
+
+
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(); // Ініціалізація Firebase перед запуском додатка
+//   runApp(const MyApp());
+// }

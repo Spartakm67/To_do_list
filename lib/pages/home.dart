@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Home extends StatefulWidget{
   const Home({super.key});
@@ -12,9 +14,32 @@ class _HomeState extends State<Home> {
   String? _userToDo;
   List todoList = [];
 
+  // void initFirebase() async {
+  //    WidgetsFlutterBinding.ensureInitialized();
+  //   await Firebase.initializeApp();
+  //   }
+
+  bool _isFirebaseInitialized = false;
+
+  Future<void> initFirebase() async {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+      setState(() {
+        _isFirebaseInitialized = true; // Ініціалізація завершена
+      });
+      print("Firebase initialized successfully");
+    } catch (e) {
+      print("Error initializing Firebase: $e");
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
+
+    initFirebase();
 
     todoList.addAll([
       'Call nine-one-one',
@@ -105,12 +130,26 @@ class _HomeState extends State<Home> {
                 ),
                 actions: [
                   ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          todoList.add(_userToDo);
-                        });
-                        Navigator.of(context).pop();
-                      },
+
+                        // setState(() {
+                        //   todoList.add(_userToDo);
+
+                    onPressed: () async {
+                      if (_userToDo != null && _userToDo!.isNotEmpty) {
+                        try {
+                          final navigator = Navigator.of(context);
+
+                          await FirebaseFirestore.instance.collection('items')
+                              .add({'item': _userToDo});
+                          navigator.pop();
+                        }
+                        catch (e) {
+                          print('Error: catch $e');
+                        }
+                      } else {
+                        print('Error: The task is empty!');
+                      }
+                    },
                       child: const Text('Add'),
                   )
                 ],
