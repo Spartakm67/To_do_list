@@ -85,7 +85,10 @@ class _HomeState extends State<Home> {
         ],
       ),
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('items').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('items')
+              .orderBy('timestamp', descending: false)
+              .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if(!snapshot.hasData) return const Text('No data!');
               return ListView.builder(
@@ -138,7 +141,10 @@ class _HomeState extends State<Home> {
                           final navigator = Navigator.of(context);
                           // print('Navigator context');
                           await FirebaseFirestore.instance.collection('items')
-                              .add({'item': _userToDo});
+                              .add({
+                            'item': _userToDo,
+                            'timestamp': FieldValue.serverTimestamp(),
+                              });
                           // print('Data added');
                          navigator.pop();
                         }
