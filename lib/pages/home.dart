@@ -135,13 +135,20 @@ class _HomeState extends State<Home> {
                         //   todoList.add(_userToDo);
 
                     onPressed: () async {
+
+                      if (!_isFirebaseInitialized) {
+                        print('Firebase is not initialized!');
+                        return;
+                      }
+
                       if (_userToDo != null && _userToDo!.isNotEmpty) {
                         try {
                           final navigator = Navigator.of(context);
-
+                          print('Navigator context');
                           await FirebaseFirestore.instance.collection('items')
                               .add({'item': _userToDo});
-                          navigator.pop();
+                          print('Data added');
+                         navigator.pop();
                         }
                         catch (e) {
                           print('Error: catch $e');
