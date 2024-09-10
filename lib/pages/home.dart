@@ -14,11 +14,6 @@ class _HomeState extends State<Home> {
   String? _userToDo;
   List todoList = [];
 
-  // void initFirebase() async {
-  //    WidgetsFlutterBinding.ensureInitialized();
-  //   await Firebase.initializeApp();
-  //   }
-
   bool _isFirebaseInitialized = false;
 
   Future<void> initFirebase() async {
@@ -26,9 +21,9 @@ class _HomeState extends State<Home> {
       WidgetsFlutterBinding.ensureInitialized();
       await Firebase.initializeApp();
       setState(() {
-        _isFirebaseInitialized = true; // Ініціалізація завершена
+        _isFirebaseInitialized = true; // database initialization is complete
       });
-      print("Firebase initialized successfully");
+      // print("Firebase initialized successfully");
     } catch (e) {
       print("Error initializing Firebase: $e");
     }
@@ -89,35 +84,37 @@ class _HomeState extends State<Home> {
               icon: const Icon(Icons.menu_outlined))
         ],
       ),
-      body: ListView.builder(
-          itemCount: todoList.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-                key: Key(todoList[index]),
-                child: Card(
-                  child: ListTile(
-                    title: Text(todoList[index]),
-                    trailing: IconButton(
-                        onPressed: () {
-                          setState(() {
-                          todoList.removeAt(index);
-                            });
-                          },
-                        icon: Icon(
-                          Icons.delete_sweep,
-                          color: Colors.cyan[200],
-                        )),
-                  ),
-                ),
-              onDismissed: (direction) {
-                //  if(direction == DismissDirection.endToStart)
-                setState(() {
-                  todoList.removeAt(index);
-                });
-              },
-            );
-          }
-      ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('items').snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if(!snapshot.hasData) return const Text('No data!');
+              return ListView.builder(
+                  itemCount: snapshot.data?.docs.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Dismissible(
+                      key: Key(snapshot.data!.docs[index].id),
+                      child: Card(
+                        child: ListTile(
+                          title: Text(snapshot.data!.docs[index].get('item')),
+                          trailing: IconButton(
+                              onPressed: () {
+                                FirebaseFirestore.instance.collection('items').
+                                doc(snapshot.data!.docs[index].id).delete();
+                              },
+                              icon: Icon(
+                                Icons.delete_sweep,
+                                color: Colors.cyan[200],
+                              )),
+                        ),
+                      ),
+                      onDismissed: (direction) {
+                        FirebaseFirestore.instance.collection('items').
+                        doc(snapshot.data!.docs[index].id).delete();
+                      },
+                    );
+                  }
+              );
+      }),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             showDialog(context: context, builder: (BuildContext context) {
@@ -130,12 +127,7 @@ class _HomeState extends State<Home> {
                 ),
                 actions: [
                   ElevatedButton(
-
-                        // setState(() {
-                        //   todoList.add(_userToDo);
-
                     onPressed: () async {
-
                       if (!_isFirebaseInitialized) {
                         print('Firebase is not initialized!');
                         return;
@@ -144,10 +136,10 @@ class _HomeState extends State<Home> {
                       if (_userToDo != null && _userToDo!.isNotEmpty) {
                         try {
                           final navigator = Navigator.of(context);
-                          print('Navigator context');
+                          // print('Navigator context');
                           await FirebaseFirestore.instance.collection('items')
                               .add({'item': _userToDo});
-                          print('Data added');
+                          // print('Data added');
                          navigator.pop();
                         }
                         catch (e) {
