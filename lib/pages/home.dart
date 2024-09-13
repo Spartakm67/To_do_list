@@ -11,8 +11,7 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home> {
 
-  String? _userToDo;
-  List todoList = [];
+  final TextEditingController _controller = TextEditingController();
 
   bool _isFirebaseInitialized = false;
 
@@ -29,20 +28,18 @@ class _HomeState extends State<Home> {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
 
     initFirebase();
 
-    todoList.addAll([
-      'Call nine-one-one',
-      'Launch project',
-      'Keep-in-touch',
-       'Call home',
-    ]);
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
+}
 
   void _menuOpen() {
     Navigator.of(context).push(
@@ -124,35 +121,40 @@ class _HomeState extends State<Home> {
               return AlertDialog(
                 title: const Text('Add element'),
                 content: TextField(
-                  onChanged: (String? value) {
-                    _userToDo = value;
-                  },
+                  controller: _controller,
+                  decoration: const InputDecoration(hintText: 'Enter a task'),
                 ),
                 actions: [
                   ElevatedButton(
                     onPressed: () async {
+                      final navigator = Navigator.of(context);
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+                      String task = _controller.text.trim();
+
                       if (!_isFirebaseInitialized) {
                         print('Firebase is not initialized!');
                         return;
                       }
-
-                      if (_userToDo != null && _userToDo!.isNotEmpty) {
+                      //_userToDo != null && _userToDo!.isNotEmpty
+                      if (task.isNotEmpty) {
                         try {
-                          final navigator = Navigator.of(context);
-                          // print('Navigator context');
                           await FirebaseFirestore.instance.collection('items')
                               .add({
-                            'item': _userToDo,
+                            'item': task,
                             'timestamp': FieldValue.serverTimestamp(),
                               });
                           // print('Data added');
                          navigator.pop();
+                         _controller.clear();
                         }
                         catch (e) {
-                          print('Error: catch $e');
+                          // print('Error: catch $e');
+                          scaffoldMessenger.showSnackBar(
+                              SnackBar(content: Text('Error adding item: $e')),);
                         }
                       } else {
-                        print('Error: The task is empty!');
+                        scaffoldMessenger.showSnackBar(
+                          const SnackBar(content: Text('Task cannot be empty!')),);
                       }
                     },
                       child: const Text('Add'),
