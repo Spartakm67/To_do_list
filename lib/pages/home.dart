@@ -119,14 +119,26 @@ class _HomeState extends State<Home> {
           onPressed: () {
             showDialog(context: context, builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text('Add element'),
+                title: const Text('Add element',
+                  style: TextStyle(
+                    color: Colors.teal,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 22,
+                  ),
+                ),
                 content: TextField(
                   controller: _controller,
-                  decoration: const InputDecoration(hintText: 'Enter a task'),
+                  decoration: const InputDecoration(hintText: 'Enter a task',
+                    hintStyle: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
                 actions: [
                   ElevatedButton(
-                    onPressed: () async {
+                      onPressed: () async {
                       final navigator = Navigator.of(context);
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       String task = _controller.text.trim();
@@ -157,7 +169,16 @@ class _HomeState extends State<Home> {
                           const SnackBar(content: Text('Task cannot be empty!')),);
                       }
                     },
-                      child: const Text('Add'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.tealAccent,
+                    ),
+                    child: const Text('Add',
+                        style: TextStyle(
+                          color: Colors.deepOrangeAccent,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                        ),
+                    ),
                   )
                 ],
               );
