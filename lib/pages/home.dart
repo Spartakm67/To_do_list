@@ -22,9 +22,17 @@ class _HomeState extends State<Home> {
       setState(() {
         _isFirebaseInitialized = true; // database initialization is complete
       });
-      // print("Firebase initialized successfully");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Firebase initialized successfully!')),
+        );
+      }
     } catch (e) {
-      print("Error initializing Firebase: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error initializing Firebase: $e')),
+        );
+      }
     }
   }
 
@@ -144,10 +152,12 @@ class _HomeState extends State<Home> {
                       String task = _controller.text.trim();
 
                       if (!_isFirebaseInitialized) {
-                        print('Firebase is not initialized!');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text(
+                              'Firebase is not initialized!')),
+                        );
                         return;
                       }
-                      //_userToDo != null && _userToDo!.isNotEmpty
                       if (task.isNotEmpty) {
                         try {
                           await FirebaseFirestore.instance.collection('items')
@@ -166,7 +176,13 @@ class _HomeState extends State<Home> {
                         }
                       } else {
                         scaffoldMessenger.showSnackBar(
-                          const SnackBar(content: Text('Task cannot be empty!')),);
+                          const SnackBar(content: Text('Task cannot be empty!',
+                            style: TextStyle(
+                              color: Colors.pink,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 30,
+                            ),
+                          )),);
                       }
                     },
                     style: ElevatedButton.styleFrom(
