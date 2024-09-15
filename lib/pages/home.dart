@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_todo/features/features.dart';
 
 class Home extends StatefulWidget{
   const Home({super.key});
@@ -10,9 +11,7 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home> {
-
   final TextEditingController _controller = TextEditingController();
-
   bool _isFirebaseInitialized = false;
 
   Future<void> initFirebase() async {
@@ -51,21 +50,26 @@ class _HomeState extends State<Home> {
 
   void _menuOpen() {
     Navigator.of(context).push(
-        MaterialPageRoute(builder: (BuildContext context) {
+      MaterialPageRoute(
+        builder: (BuildContext context) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Menu'),),
+            appBar: AppBar(
+              title: const Text('Menu'),
+            ),
             body: Row(
               children: [
                 ElevatedButton(onPressed: () {
                   Navigator.pop(context);
                   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => true);
-                }, child: const Text('To the main page')),
+                }, child: const Text('To the main page'),
+                ),
                 const Padding(padding: EdgeInsets.only(left: 15)),
                 const Text('New menu')
               ],
-            )
+            ),
           );
-        })
+        },
+      ),
     );
   }
 
@@ -75,7 +79,8 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey[500],
       appBar: AppBar(
         backgroundColor: Colors.cyan[100],
-        title: const Text('To do list',
+        title: const Text(
+          'To do list',
         style: TextStyle(
           color: Colors.deepOrange,
           fontWeight: FontWeight.w700,
@@ -86,7 +91,8 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
               onPressed: _menuOpen,
-              icon: const Icon(Icons.menu_outlined))
+              icon: const Icon(Icons.menu_outlined),
+          ),
         ],
       ),
       body: StreamBuilder(
@@ -95,8 +101,13 @@ class _HomeState extends State<Home> {
               .orderBy('timestamp', descending: false)
               .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if(!snapshot.hasData) return const Text('No data!');
-              return ListView.builder(
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text('No data!'));
+            }
+             return ListView.builder(
                   itemCount: snapshot.data?.docs.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Dismissible(
@@ -104,7 +115,21 @@ class _HomeState extends State<Home> {
                       child: Card(
                         child: ListTile(
                           title: Text(snapshot.data!.docs[index].get('item')),
-                          trailing: IconButton(
+                          trailing: Row (
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                            IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.blue),
+                              onPressed: () {
+                                final editFeature = EditFeature();
+                                editFeature.editTask(
+                                    context,
+                                    snapshot.data!.docs[index].id,
+                                // _editTask(snapshot.data!.docs[index].id,
+                                snapshot.data!.docs[index].get('item'));
+                              },
+                            ),
+                          IconButton(
                               onPressed: () {
                                 FirebaseFirestore.instance.collection('items').
                                 doc(snapshot.data!.docs[index].id).delete();
@@ -112,20 +137,26 @@ class _HomeState extends State<Home> {
                               icon: Icon(
                                 Icons.delete_sweep,
                                 color: Colors.cyan[200],
-                              )),
+                              ),
+                            ),
+                           ],
                         ),
                       ),
+                     ),
                       onDismissed: (direction) {
                         FirebaseFirestore.instance.collection('items').
                         doc(snapshot.data!.docs[index].id).delete();
                       },
                     );
-                  }
+                  },
               );
-      }),
+          },
+      ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            showDialog(context: context, builder: (BuildContext context) {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Add element',
                   style: TextStyle(
@@ -170,15 +201,14 @@ class _HomeState extends State<Home> {
                          _controller.clear();
                         }
                         catch (e) {
-                          // print('Error: catch $e');
-                          scaffoldMessenger.showSnackBar(
+                         scaffoldMessenger.showSnackBar(
                               SnackBar(content: Text('Error adding item: $e')),);
                         }
                       } else {
                         scaffoldMessenger.showSnackBar(
                           const SnackBar(content: Text('Task cannot be empty!',
                             style: TextStyle(
-                              color: Colors.pink,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 30,
                             ),
