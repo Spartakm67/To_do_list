@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_todo/pages/home.dart';
-import 'package:flutter_todo/pages/main_screen.dart';
+import 'package:flutter_todo/routes/routes.dart';
 
 
 void main() => runApp(MaterialApp(
@@ -9,10 +8,7 @@ void main() => runApp(MaterialApp(
     primaryColor: Colors.deepOrangeAccent,
   ),
   initialRoute:  '/',
-  routes: {
-    '/': (context) => const MainScreen(),
-    '/todo': (context) => const Home(),
-  },
+  routes: AppRoutes.getRoutes(),
 ));
 
 
