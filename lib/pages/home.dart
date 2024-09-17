@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_todo/features/features.dart';
 import 'package:flutter_todo/servicies/servicies.dart';
+import 'package:flutter_todo/widgets/widgets.dart';
 
 class Home extends StatefulWidget{
   const Home({super.key});
@@ -53,23 +54,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[500],
-      appBar: AppBar(
-        backgroundColor: Colors.cyan[100],
-        title: const Text(
-          'To do list',
-        style: TextStyle(
-          color: Colors.deepOrange,
-          fontWeight: FontWeight.w700,
-          fontSize: 22,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () => menuOpen(context),
-              icon: const Icon(Icons.menu_outlined),
-          ),
-        ],
+        appBar: CustomAppBar(
+            title: 'To do list',
+            onMenuPressed: () => menuOpen(context),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
