@@ -12,6 +12,7 @@ class Home extends StatefulWidget{
 
 class _HomeState extends State<Home> {
   final AddTask taskService = AddTask();
+  final TaskActions taskActions = TaskActions(taskService: AddTask());
   final TextEditingController _controller = TextEditingController();
   bool _isFirebaseInitialized = false;
 
@@ -86,37 +87,11 @@ class _HomeState extends State<Home> {
                 actions: [
                   ElevatedButton(
                       onPressed: () async {
-                      final navigator = Navigator.of(context);
-                      final scaffoldMessenger = ScaffoldMessenger.of(context);
-                      String task = _controller.text.trim();
-
-                      if (!_isFirebaseInitialized) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text(
-                              'Firebase is not initialized!')),
-                        );
-                        return;
-                      }
-                      if (task.isNotEmpty) {
-                        try {
-                          await taskService.addTask(task);
-                          navigator.pop();
-                         _controller.clear();
-                        }
-                        catch (e) {
-                         scaffoldMessenger.showSnackBar(
-                              SnackBar(content: Text('Error adding item: $e')),);
-                        }
-                      } else {
-                        scaffoldMessenger.showSnackBar(
-                          const SnackBar(content: Text('Task cannot be empty!',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 30,
-                            ),
-                          )),);
-                      }
+                        await taskActions.onAddTask(
+                          context,
+                          _controller,
+                          _isFirebaseInitialized,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.tealAccent,
