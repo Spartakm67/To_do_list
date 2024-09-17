@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_todo/servicies/servicies.dart';
 import 'package:flutter_todo/widgets/widgets.dart';
@@ -12,6 +11,7 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home> {
+  final AddTask taskService = AddTask();
   final TextEditingController _controller = TextEditingController();
   bool _isFirebaseInitialized = false;
 
@@ -39,7 +39,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-
     initFirebase();
 
   @override
@@ -100,13 +99,8 @@ class _HomeState extends State<Home> {
                       }
                       if (task.isNotEmpty) {
                         try {
-                          await FirebaseFirestore.instance.collection('items')
-                              .add({
-                            'item': task,
-                            'timestamp': FieldValue.serverTimestamp(),
-                              });
-                          // print('Data added');
-                         navigator.pop();
+                          await taskService.addTask(task);
+                          navigator.pop();
                          _controller.clear();
                         }
                         catch (e) {
