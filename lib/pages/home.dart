@@ -66,47 +66,13 @@ class _HomeState extends State<Home> {
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Add element',
-                  style: TextStyle(
-                    color: Colors.teal,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 22,
-                  ),
-                ),
-                content: TextField(
-                  controller: _controller,
-                  decoration: const InputDecoration(hintText: 'Enter a task',
-                    hintStyle: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () async {
-                        await taskActions.onAddTask(
-                          context,
-                          _controller,
-                          _isFirebaseInitialized,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.tealAccent,
-                    ),
-                    child: const Text('Add',
-                        style: TextStyle(
-                          color: Colors.deepOrangeAccent,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
-                    ),
-                  )
-                ],
-              );
-            });
+                  return AddTaskDialog(
+                    controller: _controller,
+                    isFirebaseInitialized: _isFirebaseInitialized,
+                    taskActions: taskActions,
+                  );
+                },
+            );
           },
           backgroundColor: Colors.greenAccent,
           shape: const CircleBorder(),
