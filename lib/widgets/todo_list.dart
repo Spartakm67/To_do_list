@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_todo/features/features.dart';
+import 'package:flutter_todo/servicies/servicies.dart';
 
 class TodoList extends StatelessWidget {
   const TodoList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TaskRepository taskRepository = TaskRepository();
+
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('items')
-          .orderBy('timestamp', descending: false)
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          stream: taskRepository.fetchTasks(),
+          builder: (
+              BuildContext context,
+              AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -37,14 +39,12 @@ class TodoList extends StatelessWidget {
                           editFeature.editTask(
                               context,
                               snapshot.data!.docs[index].id,
-                              // _editTask(snapshot.data!.docs[index].id,
                               snapshot.data!.docs[index].get('item'));
                         },
                       ),
                       IconButton(
                         onPressed: () {
-                          FirebaseFirestore.instance.collection('items').
-                          doc(snapshot.data!.docs[index].id).delete();
+                          taskRepository.deleteTask(snapshot.data!.docs[index].id);
                         },
                         icon: Icon(
                           Icons.delete_sweep,
@@ -56,8 +56,7 @@ class TodoList extends StatelessWidget {
                 ),
               ),
               onDismissed: (direction) {
-                FirebaseFirestore.instance.collection('items').
-                doc(snapshot.data!.docs[index].id).delete();
+                taskRepository.deleteTask(snapshot.data!.docs[index].id);
               },
             );
           },
@@ -65,5 +64,4 @@ class TodoList extends StatelessWidget {
       },
     );
   }
-
 }

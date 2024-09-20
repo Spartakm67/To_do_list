@@ -10,7 +10,7 @@ class Home extends StatefulWidget{
 }
 
 class _HomeState extends State<Home> {
-  final AddTask taskService = AddTask();
+  // final AddTask taskService = AddTask();
   final TaskActions taskActions = TaskActions(taskService: AddTask());
   final TextEditingController _controller = TextEditingController();
 
