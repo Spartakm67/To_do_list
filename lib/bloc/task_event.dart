@@ -1,18 +1,32 @@
 import 'package:equatable/equatable.dart';
-// part of 'task_bloc.dart';
+import 'package:flutter/material.dart';
 
 abstract class TaskEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class AddTaskEvent extends TaskEvent {
-  final String task;
+class LoadTasksEvent extends TaskEvent {}
 
-  AddTaskEvent(this.task);
+class AddTaskEvent extends TaskEvent {
+  final BuildContext context;
+  final TextEditingController controller;
+  final bool isFirebaseInitialized;
+
+  AddTaskEvent(this.context, this.controller, this.isFirebaseInitialized);
 
   @override
-  List<Object> get props => [task];
+  List<Object> get props => [context, controller, isFirebaseInitialized];
+}
+
+class UpdateTaskEvent extends TaskEvent {
+  final String updatedId;
+  final String updatedTask;
+
+  UpdateTaskEvent(this.updatedId, this.updatedTask);
+
+  @override
+  List<Object> get props => [updatedId, updatedTask];
 }
 
 class DeleteTaskEvent extends TaskEvent {
@@ -24,4 +38,4 @@ class DeleteTaskEvent extends TaskEvent {
   List<Object> get props => [taskId];
 }
 
-class FetchTasksEvent extends TaskEvent {}
+

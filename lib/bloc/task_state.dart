@@ -1,6 +1,4 @@
-// part of 'task_bloc.dart';
 import 'package:equatable/equatable.dart';
-// import 'package:flutter_todo/servicies/add_task.dart';
 
 abstract class TaskState extends Equatable {
   @override
@@ -12,7 +10,7 @@ class TaskInitial extends TaskState {}
 class TaskLoading extends TaskState {}
 
 class TaskLoaded extends TaskState {
-  final List<List> tasks;//? type
+  final List<Map<String, dynamic>> tasks;
 
   TaskLoaded(this.tasks);
 
@@ -21,10 +19,10 @@ class TaskLoaded extends TaskState {
 }
 
 class TaskError extends TaskState {
-  final String error;
+  final String message;
 
-  TaskError(this.error);
+  TaskError(this.message);
 
   @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [message];
 }
