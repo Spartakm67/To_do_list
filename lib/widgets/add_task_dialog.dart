@@ -38,11 +38,19 @@ Widget build(BuildContext context) {
     actions: [
       ElevatedButton(
         onPressed: () async {
-          await taskActions.onAddTask(
-            context,
+          final navigator = Navigator.of(context);
+          final scaffoldMessenger = ScaffoldMessenger.of(context);
+          final result = await taskActions.onAddTask(
             controller,
             isFirebaseInitialized,
           );
+          if (result == null) {
+            navigator.pop(result);
+          } else {
+            scaffoldMessenger.showSnackBar(
+            SnackBar(content: Text(result)),
+            );
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.tealAccent,

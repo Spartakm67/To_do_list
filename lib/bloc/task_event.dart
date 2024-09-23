@@ -9,14 +9,13 @@ abstract class TaskEvent extends Equatable {
 class LoadTasksEvent extends TaskEvent {}
 
 class AddTaskEvent extends TaskEvent {
-  final BuildContext context;
   final TextEditingController controller;
   final bool isFirebaseInitialized;
 
-  AddTaskEvent(this.context, this.controller, this.isFirebaseInitialized);
+  AddTaskEvent(this.controller, this.isFirebaseInitialized);
 
   @override
-  List<Object> get props => [context, controller, isFirebaseInitialized];
+  List<Object> get props => [controller, isFirebaseInitialized];
 }
 
 class UpdateTaskEvent extends TaskEvent {

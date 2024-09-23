@@ -1,21 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TaskRepository {
-  // Getting all tasks method
-  Stream<QuerySnapshot> fetchTasks() {
-    return FirebaseFirestore.instance
-        .collection('items')
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Stream<List<Map<String, dynamic>>> fetchTasks() {
+    return _firestore.collection('items')
         .orderBy('timestamp', descending: false)
-        .snapshots();
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return {
+          'id': doc.id,
+          'item': doc['item'],
+        };
+      }).toList();
+    });
   }
 
-  // Deleting task method
-  Future<void> deleteTask(String id) async {
-    await FirebaseFirestore.instance.collection('items').doc(id).delete();
+  Future<void> deleteTask(String taskId) async {
+    await _firestore.collection('items').doc(taskId).delete();
   }
-
-  // Method for the task editing
-  // void editTask(BuildContext context, String id, String task) {
-  //   // Code
-  // }
 }

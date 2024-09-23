@@ -6,44 +6,27 @@ class TaskActions {
 
   TaskActions({required this.taskService});
 
-  Future<void> onAddTask(
-      BuildContext context,
+  Future<String?> onAddTask(
       TextEditingController controller,
-      bool isFirebaseInitialized) async {
-    final navigator = Navigator.of(context);
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
+      bool isFirebaseInitialized
+      ) async {
     String task = controller.text.trim();
     if (!isFirebaseInitialized) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text(
-            'Firebase is not initialized!'),
-        ),
-      );
-      return;
+      return 'Firebase is not initialized!';
     }
-    if (task.isNotEmpty) {
+    if (task.isEmpty) {
+      return 'Task cannot be empty!';
+    }
       try {
         await taskService.addTask(task);
-        navigator.pop();
         controller.clear();
+        return null;
       }
       catch (e) {
-        scaffoldMessenger.showSnackBar(
-          SnackBar(content: Text('Error adding item: $e')),);
+        return 'Error adding item: $e';
       }
-    } else {
-      scaffoldMessenger.showSnackBar(
-        const SnackBar(content: Text('Task cannot be empty!',
-           style: TextStyle(
-             color: Colors.white,
-             fontWeight: FontWeight.w500,
-             fontSize: 30,
-           ),
-         ),
-       ),
-     );
     }
   }
-}
+
 
 
