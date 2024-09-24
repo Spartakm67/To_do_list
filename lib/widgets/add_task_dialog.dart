@@ -48,7 +48,22 @@ Widget build(BuildContext context) {
             navigator.pop(result);
           } else {
             scaffoldMessenger.showSnackBar(
-            SnackBar(content: Text(result)),
+            SnackBar(
+              content: Center(
+                heightFactor: 1.0,
+              child: Text(
+                result,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                    ),
+                  textAlign: TextAlign.center,
+                  ),
+                ),
+              backgroundColor: Colors.redAccent,
+              duration: const Duration(seconds: 2),
+              ),
             );
           }
         },

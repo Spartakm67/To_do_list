@@ -30,7 +30,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
   void _onAddTask(AddTaskEvent event, Emitter<TaskState> emit) async {
     try {
-      final result = await taskActions.onAddTask(event.controller, event.isFirebaseInitialized);
+      final result = await taskActions.onAddTask(
+          event.controller,
+          event.isFirebaseInitialized,
+      );
 
      if (result != null) {
        emit(TaskError(result));

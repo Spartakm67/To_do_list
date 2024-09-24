@@ -16,7 +16,7 @@ class Home extends StatelessWidget{
       child: Scaffold(
       backgroundColor: Colors.grey[500],
         appBar: CustomAppBar(
-            title: 'To do list',
+            title: 'To do & list',
             onMenuPressed: () => menuOpen(context),
       ),
       body: BlocListener<TaskBloc, TaskState>(
