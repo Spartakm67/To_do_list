@@ -21,16 +21,13 @@ class TodoList extends StatelessWidget {
           return BlocSelector<TaskBloc, TaskState, List<Map<String, dynamic>>>(
               selector: (state) => (state as TaskLoaded).tasks,
               builder: (context, tasks) {
-          // if (state.tasks.isEmpty) {
-                if (tasks.isEmpty) {
+                 if (tasks.isEmpty) {
             return const Center(child: Text('No tasks available!'));
           }
           return ListView.builder(
             itemCount: tasks.length,
-            // itemCount: state.tasks.length,
             itemBuilder: (context, index) {
               final task = tasks[index];
-              // final task = state.tasks[index];
               return Dismissible(
                 key: Key(task['id']),
                 child: Card(

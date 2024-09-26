@@ -11,6 +11,7 @@ class Home extends StatelessWidget{
   Widget build(BuildContext context) {
     final TaskActions taskActions = TaskActions(taskService: AddTask());
     final TextEditingController controller = TextEditingController();
+
     return BlocProvider(
       create: (_) => TaskBloc()..add(LoadTasksEvent()),
       child: Scaffold(
