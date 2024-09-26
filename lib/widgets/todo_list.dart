@@ -28,7 +28,7 @@ class TodoList extends StatelessWidget {
                 key: Key(task['id']),
                 child: Card(
                   child: ListTile(
-                    title: Text(task['item']),
+                    title: Text('${index + 1}. ${task['item']}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
