@@ -53,4 +53,12 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       emit(const TaskError('Failed to delete task'));
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchTasksFromDatabase() async {
+    return [
+      {'id': '1', 'item': 'Task 1'},
+      {'id': '2', 'item': 'Task 2'},
+      {'id': '3', 'item': 'Task 3'},
+    ];
+  }
 }

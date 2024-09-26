@@ -9,6 +9,7 @@ class TodoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TaskBloc, TaskState>(
+
       builder: (context, state) {
         if (state is TaskLoading) {
           return const Center(child: CircularProgressIndicator());
@@ -17,13 +18,19 @@ class TodoList extends StatelessWidget {
           return Center(child: Text('Error: ${state.message}'));
         }
         if (state is TaskLoaded) {
-          if (state.tasks.isEmpty) {
+          return BlocSelector<TaskBloc, TaskState, List<Map<String, dynamic>>>(
+              selector: (state) => (state as TaskLoaded).tasks,
+              builder: (context, tasks) {
+          // if (state.tasks.isEmpty) {
+                if (tasks.isEmpty) {
             return const Center(child: Text('No tasks available!'));
           }
           return ListView.builder(
-            itemCount: state.tasks.length,
+            itemCount: tasks.length,
+            // itemCount: state.tasks.length,
             itemBuilder: (context, index) {
-              final task = state.tasks[index];
+              final task = tasks[index];
+              // final task = state.tasks[index];
               return Dismissible(
                 key: Key(task['id']),
                 child: Card(
@@ -62,9 +69,11 @@ class TodoList extends StatelessWidget {
               );
             },
           );
-        }
-        return const Center(child: Text('No data!'));
-      },
-    );
-  }
+        },
+      );
+     }
+      return const Center(child: Text('No data!'));
+    },
+  );
+ }
 }
