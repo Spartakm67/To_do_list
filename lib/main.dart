@@ -7,7 +7,7 @@ import 'package:flutter_todo/servicies/servicies.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(const MyApp()
+  runApp(const MyApp(),
     // BlocProvider(
     //   create: (context) => TaskBloc(),
     //   child: const MyApp(),

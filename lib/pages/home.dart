@@ -32,7 +32,7 @@ class Home extends StatelessWidget{
         ),
       floatingActionButton: FloatingActionButton(
             onPressed: () async {
-             final taskBloc = BlocProvider.of<TaskBloc>(context);
+             // final taskBloc = BlocProvider.of<TaskBloc>(context);
              final  result = await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) {
@@ -45,7 +45,7 @@ class Home extends StatelessWidget{
               );
                 // Add tasks through Bloc after closing the dialog
                 if (result != null && result.isNotEmpty) {
-                  taskBloc.add(
+                  BlocProvider.of<TaskBloc>(context).add(
                     AddTaskEvent(controller, true));
                     controller.clear();
                 }

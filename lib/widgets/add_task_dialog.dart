@@ -59,15 +59,12 @@ Widget build(BuildContext context) {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.tealAccent,
         ),
-        child: const Text('Add',
+        child: const Text(
+          'Add',
           style: AddTaskDialogStyle.addButtonTextStyle,
         ),
       )
     ],
   );
  }
-
-
-
-
 }
