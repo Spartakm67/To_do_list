@@ -18,11 +18,9 @@ class TodoList extends StatelessWidget {
           return Center(child: Text('Error: ${state.message}'));
         }
         if (state is TaskLoaded) {
-          return BlocSelector<TaskBloc, TaskState, List<Map<String, dynamic>>>(
-              selector: (state) => (state as TaskLoaded).tasks,
-              builder: (context, tasks) {
-                 if (tasks.isEmpty) {
-            return const Center(child: Text('No tasks available!'));
+          final tasks = state.tasks;
+            if (tasks.isEmpty) {
+                return const Center(child: Text('No tasks available!'));
           }
           return ListView.builder(
             itemCount: tasks.length,
@@ -66,11 +64,9 @@ class TodoList extends StatelessWidget {
               );
             },
           );
-        },
-      );
-     }
+        }
       return const Center(child: Text('No data!'));
-    },
-  );
- }
+     },
+   );
+  }
 }
