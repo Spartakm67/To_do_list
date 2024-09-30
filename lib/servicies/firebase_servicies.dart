@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+bool _isFirebaseInitialized = false;
+
 Future<void> initializeFirebase(BuildContext context) async {
+
+  if (_isFirebaseInitialized) return;
   try {
     await Firebase.initializeApp();
+    _isFirebaseInitialized = true;
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -23,10 +28,5 @@ Future<void> initializeFirebase(BuildContext context) async {
     }
   }
 }
-
-
-
-
-
 
 
