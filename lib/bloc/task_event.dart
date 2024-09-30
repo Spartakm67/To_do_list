@@ -10,7 +10,6 @@ class LoadTasksEvent extends TaskEvent {}
 
 class AddTaskEvent extends TaskEvent {
   final TextEditingController controller;
-  // final String taskText;
   final bool isFirebaseInitialized;
 
   AddTaskEvent(this.controller, this.isFirebaseInitialized);
