@@ -32,8 +32,7 @@ class Home extends StatelessWidget{
         ),
       floatingActionButton: FloatingActionButton(
             onPressed: () async {
-             // final taskBloc = BlocProvider.of<TaskBloc>(context);
-             final  result = await showDialog<String>(
+              await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) {
                   return AddTaskDialog(
@@ -43,13 +42,7 @@ class Home extends StatelessWidget{
                   );
                 },
               );
-                // Add tasks through Bloc after closing the dialog
-                if (result != null && result.isNotEmpty) {
-                  BlocProvider.of<TaskBloc>(context).add(
-                    AddTaskEvent(controller, true));
-                    controller.clear();
-                }
-             },
+            },
           backgroundColor: Colors.greenAccent,
           shape: const CircleBorder(),
           child: const Icon(
